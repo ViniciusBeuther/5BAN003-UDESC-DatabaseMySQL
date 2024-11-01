@@ -24,6 +24,7 @@ from ambulatorios as a
 join medicos as m
 where m.nroa = a.nroa and m.especialidade = 'ortopedia' and m.ativo = 1;
 
+
 # e. Get the name and CPF of the patient that have appointments scheduled between june 13 2024 - june 16 2024
 select * from consultas;
 select p.nome, p.CPF, c.data as 'Data da consulta', c.hora as 'Horário agendado' 
@@ -37,3 +38,38 @@ SELECT c.codp, m.nome, m.idade
 FROM consultas AS c
 JOIN medicos AS m ON c.codm = m.codm
 WHERE c.codp = (SELECT p.codp FROM pacientes AS p WHERE p.nome = 'Ana');
+
+
+# g. Get the code and name from the doctors who work on the same ambulatory as doctor Pedro (using just these information)
+select m.codm, m.nome, a.nroa as 'Andar de atendimento'
+from medicos as m
+join ambulatorios as a
+where (select m.nroa from medicos as m where m.nome = 'Pedro') = a.nroa;
+
+
+# h. Get the name, CPF and age of the patients who have orthopedist's appointments scheduled before 2024-06-21
+ SELECT p.nome, p.CPF, p.idade
+FROM pacientes AS p
+JOIN consultas AS c ON p.codp = c.codp
+JOIN medicos AS m ON c.codm = m.codm
+WHERE c.data < '2024-06-21' 
+  AND m.especialidade = 'ortopedista';
+ 
+ # i. Get the name and salary from the employees that live in the same city that Denise and have a higher salary
+ select f.nome, f.salario
+ from funcionarios as f
+ where f.salario > (select salario from funcionarios where nome='Denise')
+ and f.cidade = (select cidade from funcionarios where nome='Denise');
+ 
+ # j. Get the data from all ambulatories and for those where the doctors attend, show their names as well
+ select a.*, m.nome
+ from ambulatorios as a
+ join medicos as m on a.nroa = m.nroa
+ and m.ativo = 1;
+ 
+ # k. For each appointment schedules, list the doctor name, the patient name, the date and hour and the ambulatory to be used.
+select p.nome as 'Nome do Paciente', m.nome as 'Nome do Médico', c.data, c.hora, a.nroa as 'Numero do Ambulatorio'
+from pacientes as p 
+left join consultas as c on c.codp = p.codp
+left join medicos as m on c.codm = m.codm
+left join ambulatorios as a on m.nroa = a.nroa;
