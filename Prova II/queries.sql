@@ -140,4 +140,6 @@ select p.*
     join empresas as e on e.codEmpresa = bt.codEmpresa
     join bilhetes as b on p.cpf = b.cpfPassageiro
     where b.codTrecho ALL();
+
+    
     	
