@@ -14,13 +14,19 @@ public class Produtos {
     protected String descricao;
     protected String tipo;
     protected String siglaUnidadeMed;
+    public static int idCounter = 13;
 
     // Product constructor
-    public void SetProduto( int idProduto, String nome, String descricao, String tipo, String siglaUnidadeMed ){
-        this.idProduto = idProduto;
+    public void SetProduto( String nome, String descricao, String tipo, String siglaUnidadeMed ){
         this.nome = nome;
         this.descricao = descricao;
         this.tipo = tipo;
+
+        idCounter++;
+    }
+
+    public void setIdProduto(int idProduto){
+        this.idProduto = idProduto;
     }
 
     // Get all products from MySQL
@@ -41,7 +47,8 @@ public class Produtos {
                 String siglaUnidadeMed = dbReturnResults.getString("siglaUnidadeMed");
 
                 Produtos produto = new Produtos();
-                produto.SetProduto( idProduto, nome, descricao, tipo, siglaUnidadeMed );
+                produto.SetProduto( nome, descricao, tipo, siglaUnidadeMed );
+                produto.setIdProduto(idProduto);
                 produtos.add(produto);
             }
 

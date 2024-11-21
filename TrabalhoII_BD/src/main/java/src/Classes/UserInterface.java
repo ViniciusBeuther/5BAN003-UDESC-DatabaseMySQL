@@ -3,6 +3,7 @@ import src.database.MySQLConnection;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -41,7 +42,44 @@ public class UserInterface {
                 break;
 
             case 1:
-                System.out.println("Opção 1 selecionada.");
+                Scanner scanner = new Scanner(System.in);
+                System.out.println("===== ADICIONAR PRODUTO =====");
+                try{
+                    System.out.println("Qual o nome do produto: ");
+                    String tempNome = scanner.nextLine();
+
+                    System.out.println("Qual a descrição do produto: ");
+                    String tempDescricao = scanner.nextLine();
+
+                    System.out.println("Qual o tipo do produto (1-Doces / 2-Bebidas): ");
+                    String tempTipo = scanner.nextLine();
+
+
+                    if(tempTipo.equals("1")){
+                        tempTipo = "doces";
+                    } else if (tempTipo.equals("2")){
+                        tempTipo = "bebidas";
+                    }
+                    else{
+                        throw new IllegalArgumentException("Tipo inválido de produto");
+                    }
+
+                    System.out.println("Qual é a unidade de medida (L/ML/G/KG/UN): ");
+                    String tempMedida = scanner.nextLine().toUpperCase();
+
+
+                    if (!List.of("L", "ML", "G", "KG", "UN").contains(tempMedida)) {
+                        throw new IllegalArgumentException("Unidade de medida inválida!");
+                    }
+
+                    Produtos novoProduto = new Produtos();
+                    novoProduto.SetProduto(tempNome, tempDescricao, tempTipo, tempMedida);
+                    System.out.println(novoProduto.nome);
+
+
+                } catch (Exception e){
+                    System.out.println("Algo deu errado, tente novamente.");
+                }
                 break;
 
             // Show all products saved on MySQL

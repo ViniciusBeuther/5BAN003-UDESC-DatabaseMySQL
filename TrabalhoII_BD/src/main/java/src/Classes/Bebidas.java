@@ -6,7 +6,8 @@ public class Bebidas extends Produtos{
 
     // Constructor for "bebidas"
     public Bebidas( int idProduto, String nome, String descricao, String tipo, String siglaUnidadeMed, int volume, int temCafeina ){
-        super.SetProduto(idProduto, nome, descricao, tipo, siglaUnidadeMed);
+        super.SetProduto(nome, descricao, tipo, siglaUnidadeMed);
+        this.setIdProduto(idProduto);
         this.volume = volume;
         this.temCafeina = temCafeina;
     }
