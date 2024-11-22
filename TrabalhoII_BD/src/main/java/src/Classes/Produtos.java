@@ -16,6 +16,50 @@ public class Produtos {
     protected String siglaUnidadeMed;
     public static int idCounter = 13;
 
+    public int getIdProduto() {
+        return idProduto;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getSiglaUnidadeMed() {
+        return siglaUnidadeMed;
+    }
+
+    public void setSiglaUnidadeMed(String siglaUnidadeMed) {
+        this.siglaUnidadeMed = siglaUnidadeMed;
+    }
+
+    public static int getIdCounter() {
+        return idCounter;
+    }
+
+    public static void setIdCounter(int idCounter) {
+        Produtos.idCounter = idCounter;
+    }
+
     // Product constructor
     public void SetProduto( String nome, String descricao, String tipo, String siglaUnidadeMed ){
         this.nome = nome;
@@ -68,18 +112,18 @@ public class Produtos {
 
             // Build a prepared statement to avoid SQL Injection and insert the new product into the database
             try(PreparedStatement stmt = db.connection.prepareStatement(query)){
-                stmt.setString(1, novoProduto.nome);
-                stmt.setString(2, novoProduto.descricao);
-                stmt.setString(3, novoProduto.tipo);
-                stmt.setString(4, novoProduto.siglaUnidadeMed);
+                stmt.setString(1, novoProduto.getNome());
+                stmt.setString(2, novoProduto.getDescricao());
+                stmt.setString(3, novoProduto.getTipo());
+                stmt.setString(4, novoProduto.getSiglaUnidadeMed());
 
                 int rowsAffected = stmt.executeUpdate();
                 System.out.println("Inserido com sucesso, linhas afetadas: " + rowsAffected);
 
+                
             } catch (SQLException e){
                 System.out.println("Não foi possível executar a query de inserção de produto. erro: " + e);
             }
-
 
             return("Novo produto inserido com sucesso!");
         } catch (SQLException e){

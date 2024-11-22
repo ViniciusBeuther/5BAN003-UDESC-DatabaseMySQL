@@ -4,19 +4,19 @@ import java.sql.*;
 
 public class MySQLConnection {
     // URL do banco de dados
-    private String URL;
-    private String USER;
-    private String PASSWORD;
+    private final String URL;
+    private final String USER;
+    private final String PASSWORD;
 
     public Connection connection = null;
     public Statement cursor;
 
     // Constructor class
     public MySQLConnection(){
-        this.connect();
         this.URL = "jdbc:mysql://localhost:3306/projeto1";
         this.PASSWORD = "V1n1c1us";
         this.USER = "root";
+        this.connect();
     }
 
     // Start the connection with MySQL
