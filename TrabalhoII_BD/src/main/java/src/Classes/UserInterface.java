@@ -53,12 +53,13 @@ public class UserInterface {
 
                     System.out.println("Qual o tipo do produto (1-Doces / 2-Bebidas): ");
                     String tempTipo = scanner.nextLine();
+                    String tipoToInsert;
 
 
                     if(tempTipo.equals("1")){
-                        tempTipo = "doces";
+                        tipoToInsert = "doces";
                     } else if (tempTipo.equals("2")){
-                        tempTipo = "bebidas";
+                        tipoToInsert = "bebidas";
                     }
                     else{
                         throw new IllegalArgumentException("Tipo inválido de produto");
@@ -66,6 +67,7 @@ public class UserInterface {
 
                     System.out.println("Qual é a unidade de medida (L/ML/G/KG/UN): ");
                     String tempMedida = scanner.nextLine().toUpperCase();
+                    System.out.println("medida is: " + tempMedida);
 
 
                     if (!List.of("L", "ML", "G", "KG", "UN").contains(tempMedida)) {
@@ -73,9 +75,13 @@ public class UserInterface {
                     }
 
                     Produtos novoProduto = new Produtos();
-                    novoProduto.SetProduto(tempNome, tempDescricao, tempTipo, tempMedida);
-                    System.out.println(novoProduto.nome);
+                    novoProduto.setNome(tempNome);
+                    novoProduto.setDescricao(tempDescricao);
+                    novoProduto.setTipo(tipoToInsert);
+                    novoProduto.setSiglaUnidadeMed(tempMedida);
+                    System.out.println(novoProduto.getSiglaUnidadeMed());
 
+                    novoProduto.insert(novoProduto);
 
                 } catch (Exception e){
                     System.out.println("Algo deu errado, tente novamente.");
@@ -88,11 +94,11 @@ public class UserInterface {
                 ArrayList<Produtos> data = produtos.get();
 
                 System.out.println("---------------------------------------------------------------------------------------------------------------------------");
-                System.out.println(String.format("| %-12s | %-20s | %-50s | %-15s | %-10s |", "ID", "Nome", "Descrição", "Tipo", "Unidade"));
+                System.out.printf("| %-12s | %-20s | %-50s | %-15s | %-10s |%n", "ID", "Nome", "Descrição", "Tipo", "Unidade");
                 System.out.println("---------------------------------------------------------------------------------------------------------------------------");
 
-                for(int i = 0; i < data.size(); i++){
-                    System.out.println(String.format("| %-12d | %-20s | %-50s | %-15s | %-10s |", data.get(i).idProduto, data.get(i).nome, data.get(i).descricao, data.get(i).tipo, data.get(i).siglaUnidadeMed));
+                for (Produtos item : data) {
+                    System.out.printf("| %-12d | %-20s | %-50s | %-15s | %-10s |%n", item.getIdProduto(), item.getNome(), item.getDescricao(), item.getTipo(), item.getSiglaUnidadeMed());
                 }
                 System.out.println("---------------------------------------------------------------------------------------------------------------------------");
 

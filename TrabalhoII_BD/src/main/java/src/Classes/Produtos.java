@@ -78,7 +78,7 @@ public class Produtos {
         ArrayList<Produtos> produtos = new ArrayList<Produtos>();
         MySQLConnection db = new MySQLConnection();
 
-        try (Statement cursor = db.connect()){
+        try (Statement cursor = db.connect().createStatement()){
             String query = "SELECT * FROM produtos";
             ResultSet dbReturnResults = cursor.executeQuery(query);
 
@@ -91,8 +91,12 @@ public class Produtos {
                 String siglaUnidadeMed = dbReturnResults.getString("siglaUnidadeMed");
 
                 Produtos produto = new Produtos();
-                produto.SetProduto( nome, descricao, tipo, siglaUnidadeMed );
+                produto.setNome(nome);
+                produto.setDescricao(descricao);
+                produto.setTipo(tipo);
+                produto.setSiglaUnidadeMed(siglaUnidadeMed);
                 produto.setIdProduto(idProduto);
+
                 produtos.add(produto);
             }
 
@@ -107,7 +111,7 @@ public class Produtos {
     public String insert(Produtos novoProduto){
         MySQLConnection db = new MySQLConnection();
 
-        try(Statement cursor = db.connect()){
+        try(Statement cursor = db.connect().createStatement()){
             String query = "INSERT INTO produtos(nome, descricao, tipo, siglaUnidadeMed) VALUES(?, ?, ?, ?)";
 
             // Build a prepared statement to avoid SQL Injection and insert the new product into the database
@@ -117,10 +121,12 @@ public class Produtos {
                 stmt.setString(3, novoProduto.getTipo());
                 stmt.setString(4, novoProduto.getSiglaUnidadeMed());
 
+
                 int rowsAffected = stmt.executeUpdate();
                 System.out.println("Inserido com sucesso, linhas afetadas: " + rowsAffected);
+                db.connection.close();
 
-                
+
             } catch (SQLException e){
                 System.out.println("Não foi possível executar a query de inserção de produto. erro: " + e);
             }
