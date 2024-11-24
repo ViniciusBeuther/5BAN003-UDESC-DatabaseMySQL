@@ -20,12 +20,12 @@ public class MySQLConnection {
     }
 
     // Start the connection with MySQL
-    public Connection connect(){
-        try{
+    public Connection connect() {
+        try {
             this.connection = DriverManager.getConnection(this.URL, this.USER, this.PASSWORD);
             return this.connection;
 
-        } catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("Não foi possível conectar ao banco de dados.");
             return null;
         }

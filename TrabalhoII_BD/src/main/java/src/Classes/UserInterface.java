@@ -20,6 +20,7 @@ public class UserInterface {
             System.out.println("===== BANCO DE DADOS =====");
             System.out.println("1- Adicionar novo produto");
             System.out.println("2- Listar produtos");
+            System.out.println("3- Listar clientes");
             System.out.println("0- Sair");
 
             System.out.println("Digite a opção desejada: ");
@@ -42,6 +43,12 @@ public class UserInterface {
                 break;
 
             case 1:
+                String tipoToInsert;
+                String doceOrigem="";
+                float volumeBebida = 0;
+                float pesoDoce = 0;
+                boolean temCafeina = false;
+
                 Scanner scanner = new Scanner(System.in);
                 System.out.println("===== ADICIONAR PRODUTO =====");
                 try{
@@ -53,8 +60,6 @@ public class UserInterface {
 
                     System.out.println("Qual o tipo do produto (1-Doces / 2-Bebidas): ");
                     String tempTipo = scanner.nextLine();
-                    String tipoToInsert;
-
 
                     if(tempTipo.equals("1")){
                         tipoToInsert = "doces";
@@ -65,10 +70,32 @@ public class UserInterface {
                         throw new IllegalArgumentException("Tipo inválido de produto");
                     }
 
+                    if (tipoToInsert.equals("bebidas")) {
+                        System.out.println("Qual é o volume da embalagem: ");
+                        volumeBebida = scanner.nextFloat();
+                        scanner.nextLine(); // Consome a quebra de linha após nextFloat()
+
+                        System.out.println("A bebida possui cafeína (0-não / 1-sim): ");
+                        String tempTemCafeina = scanner.nextLine();
+
+                        if (tempTemCafeina.equals("1")) {
+                            temCafeina = true;
+                        } else if (tempTemCafeina.equals("0")) {
+                            temCafeina = false;
+                        } else {
+                            throw new Exception("Resposta se possui cafeína é inválida! Aceito somente 0 ou 1!");
+                        }
+                    } else {
+                        System.out.println("Qual é a origem do doce: ");
+                        doceOrigem = scanner.nextLine();
+                        System.out.println("Qual é o peso do doce: ");
+                        pesoDoce = scanner.nextFloat();
+                        scanner.nextLine();
+
+                    }
+
                     System.out.println("Qual é a unidade de medida (L/ML/G/KG/UN): ");
                     String tempMedida = scanner.nextLine().toUpperCase();
-                    System.out.println("medida is: " + tempMedida);
-
 
                     if (!List.of("L", "ML", "G", "KG", "UN").contains(tempMedida)) {
                         throw new IllegalArgumentException("Unidade de medida inválida!");
@@ -81,7 +108,14 @@ public class UserInterface {
                     novoProduto.setSiglaUnidadeMed(tempMedida);
                     System.out.println(novoProduto.getSiglaUnidadeMed());
 
-                    novoProduto.insert(novoProduto);
+                    // novoProduto.insert(novoProduto);
+                    if( tipoToInsert.equals("bebidas") ){
+                        var novaBebida = new Bebidas(novoProduto.getIdProduto(), volumeBebida, temCafeina);
+                        novaBebida.insertIntoDb(novoProduto, novaBebida.getVolume(), novaBebida.getTemCafeina());
+                    } else {
+                        var novoDoce = new Doces(pesoDoce, doceOrigem);
+                        novoDoce.insertIntoDb(novoProduto);
+                    }
 
                 } catch (Exception e){
                     System.out.println("Algo deu errado, tente novamente.");
@@ -103,7 +137,17 @@ public class UserInterface {
                 System.out.println("---------------------------------------------------------------------------------------------------------------------------");
 
                 break;
+            case 3:
+              Clientes clientes = new Clientes();
+              ArrayList<Clientes> dataClientes = clientes.get();
+
+              for(Clientes c : dataClientes){
+                  System.out.println(clientes.getNome());
+              }
+
         }
+
+
     }
 }
 

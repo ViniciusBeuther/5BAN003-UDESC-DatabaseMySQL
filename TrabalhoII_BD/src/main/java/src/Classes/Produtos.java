@@ -75,7 +75,7 @@ public class Produtos {
 
     // Get all products from MySQL
     public ArrayList<Produtos> get(){
-        ArrayList<Produtos> produtos = new ArrayList<Produtos>();
+        ArrayList<Produtos> produtos = new ArrayList<>();
         MySQLConnection db = new MySQLConnection();
 
         try (Statement cursor = db.connect().createStatement()){
@@ -111,7 +111,7 @@ public class Produtos {
     public String insert(Produtos novoProduto){
         MySQLConnection db = new MySQLConnection();
 
-        try(Statement cursor = db.connect().createStatement()){
+        try{
             String query = "INSERT INTO produtos(nome, descricao, tipo, siglaUnidadeMed) VALUES(?, ?, ?, ?)";
 
             // Build a prepared statement to avoid SQL Injection and insert the new product into the database
@@ -132,7 +132,7 @@ public class Produtos {
             }
 
             return("Novo produto inserido com sucesso!");
-        } catch (SQLException e){
+        } catch (Exception e){
             System.out.println("Não foi possível inserir o novo produto. Verifique os dados e tente novamente.");
             return null;
         }
