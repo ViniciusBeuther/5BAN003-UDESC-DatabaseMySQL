@@ -21,6 +21,8 @@ public class UserInterface {
             System.out.println("1- Adicionar novo produto");
             System.out.println("2- Listar produtos");
             System.out.println("3- Listar clientes");
+            System.out.println("4- Buscar Produto");
+            System.out.println("5- Buscar Cliente");
             System.out.println("0- Sair");
 
             System.out.println("Digite a opção desejada: ");
@@ -51,6 +53,7 @@ public class UserInterface {
 
                 Scanner scanner = new Scanner(System.in);
                 System.out.println("===== ADICIONAR PRODUTO =====");
+
                 try{
                     System.out.println("Qual o nome do produto: ");
                     String tempNome = scanner.nextLine();
@@ -136,18 +139,67 @@ public class UserInterface {
                 }
                 System.out.println("---------------------------------------------------------------------------------------------------------------------------");
 
-                break;
             case 3:
-              Clientes clientes = new Clientes();
-              ArrayList<Clientes> dataClientes = clientes.get();
+                Clientes clientes = new Clientes();
+                ArrayList<Clientes> dataClientes = clientes.get();
 
-              for(Clientes c : dataClientes){
-                  System.out.println(clientes.getNome());
-              }
+                System.out.println("-------------------------------------------------------------------------------------");
+                System.out.printf("| %-12s | %-50s | %-30s%n", "ID", "Nome", "Cliente Desde |");
+                System.out.println("-------------------------------------------------------------------------------------");
 
+                for (Clientes cliente : dataClientes) {
+                    System.out.printf("| %-12d | %-50s | %-30s%n", cliente.getIdCliente(), cliente.getNome(), cliente.getClienteDesde());
+                }
+                System.out.println("------------------------------------------------------------------------------------");
+
+            // Search for a product into database
+            case 4:
+                System.out.println("===== BUSCAR PRODUTO =====");
+                Produtos produtoObj = new Produtos();
+                ArrayList<Produtos> produtosSalvos = produtoObj.get();
+
+                Scanner buscaScanner = new Scanner(System.in);
+                System.out.println("Digite o nome do produto que deseja buscar: ");
+                String termoDeBusca = buscaScanner.nextLine();
+                buscaScanner.close();
+
+                boolean found = false;
+
+                for(Produtos prod : produtosSalvos){
+                   if(prod.getNome().equalsIgnoreCase(termoDeBusca)){
+                       found = true;
+                       System.out.printf("| %-12s | %-20s | %-50s | %-15s | %-10s |%n", "ID", "Nome", "Descrição", "Tipo", "Unidade");
+                       System.out.printf("| %-12d | %-20s | %-50s | %-15s | %-10s | %n", prod.getIdProduto(), prod.getNome(), prod.getDescricao(), prod.getTipo(), prod.getSiglaUnidadeMed());
+                   }
+                }
+
+                if(!found){
+                    System.out.println("Nenhum produto com esse nome foi encontrado: " + termoDeBusca);
+                }
+
+            // Used to search a client by name
+            case 5:
+                var buscaClientesDb= new Clientes();
+                ArrayList<Clientes> clientesSalvosDb = buscaClientesDb.get();
+
+                System.out.println("===== Buscar Cliente =====");
+                var buscaClienteScanner = new Scanner(System.in);
+                System.out.println("Digite o nome do cliente que deseja buscar: ");
+                var termoClientesBusca = buscaClienteScanner.nextLine();
+
+                boolean foundCliente = false;
+
+                for(Clientes cli : clientesSalvosDb){
+                   if(cli.getNome().equalsIgnoreCase(termoClientesBusca)){
+                       break;
+                   }
+
+                   if(!foundCliente){
+                       System.out.println("Cliente não encontrado: " + termoClientesBusca);
+                   }
+                }
+
+                break;
         }
-
-
     }
 }
-

@@ -48,7 +48,7 @@ public class Clientes {
 
     public ArrayList<Clientes> get(){
         String queryGetClientes = "SELECT * FROM clientes";
-        ArrayList<Clientes> clientesList = new ArrayList<Clientes>();
+        ArrayList<Clientes> clientesList = new ArrayList<>();
 
         var db = new MySQLConnection();
 
@@ -59,7 +59,6 @@ public class Clientes {
             int idCliente = dbReturnedData.getInt(1);
             Date clienteDesde = dbReturnedData.getDate(2);
             String nome = dbReturnedData.getString(3);
-
             Clientes cliente = new Clientes();
             cliente.setIdCliente(idCliente);
             cliente.setClienteDesde(clienteDesde);
