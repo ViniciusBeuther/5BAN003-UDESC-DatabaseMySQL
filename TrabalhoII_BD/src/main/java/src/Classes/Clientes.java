@@ -2,6 +2,7 @@ package src.Classes;
 
 import src.database.MySQLConnection;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -72,5 +73,34 @@ public class Clientes {
         }
 
         return(clientesList);
+    }
+
+    public void update(String newNome, int clientId) throws SQLException {
+        MySQLConnection db = new MySQLConnection();
+        String updateNameQuery = "UPDATE clientes SET nome=? WHERE id=?";
+
+        try{
+            PreparedStatement clienteStmt = db.connection.prepareStatement(updateNameQuery);
+            clienteStmt.setString(1, newNome);
+            clienteStmt.setInt(2, clientId);
+
+            int rowsAffected = clienteStmt.executeUpdate();
+            if(rowsAffected >= 1){
+                System.out.println("Cliente atualizado com sucesso!");
+            } else{
+                System.out.println("Nenhum cliente encontrado com o nome fornecido.");
+            }
+
+        } catch(Exception e){
+            System.out.println("Erro ao seu conectar ao banco de dados para atualização de cliente.");
+        } finally {
+            try{
+                if(db.connection != null && !db.connection.isClosed()){
+                    db.connection.close();
+                }
+            } catch (Exception e){
+                System.out.println("Erro ao encerrar conexão com o banco de dados.");
+            }
+        }
     }
 }

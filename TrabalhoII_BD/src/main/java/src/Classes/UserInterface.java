@@ -1,13 +1,24 @@
 package src.Classes;
-import src.database.MySQLConnection;
 
-import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class UserInterface {
     public int option;
+    public Scanner inputScanner = new Scanner(System.in);
+    protected ArrayList<Produtos> savedProducts = new Produtos().get();
+    protected ArrayList<Clientes> savedClients = new Clientes().get();
+    protected Clientes client = new Clientes();
+
+    public ArrayList<Produtos> getSavedProducts() {
+        return savedProducts;
+    }
+
+    public ArrayList<Clientes> getSavedClients() {
+        return savedClients;
+    }
 
     public UserInterface(){
         this.showMenu();
@@ -23,6 +34,7 @@ public class UserInterface {
             System.out.println("3- Listar clientes");
             System.out.println("4- Buscar Produto");
             System.out.println("5- Buscar Cliente");
+            System.out.println("6- Editar Cliente");
             System.out.println("0- Sair");
 
             System.out.println("Digite a opção desejada: ");
@@ -199,7 +211,34 @@ public class UserInterface {
                    }
                 }
 
-                break;
+            case 6:
+                boolean updateClientFlag = false;
+                System.out.println("===== Editar Nome =====");
+                System.out.println("Qual o cliente que deseja atualizar (Nome): ");
+                String clienteToUpdate = this.inputScanner.nextLine();
+
+               for(Clientes cli : this.getSavedClients()){
+                  if(cli.getNome().equalsIgnoreCase(clienteToUpdate)){
+                     updateClientFlag = true;
+
+                     System.out.println("Qual o novo nome que deseja (0-Cancelar): ");
+                     var newNome = this.inputScanner.nextLine();
+
+                     if(newNome.equalsIgnoreCase("0")){
+                         break;
+                     }
+
+                     try{
+                         this.client.update(newNome, cli.getIdCliente());
+                     } catch(Exception e){
+                         System.out.println("Erro ao chamar a query de UPDATE de cliente. Erro: " + e);
+                     }
+                  }
+               }
+
+               if(!updateClientFlag){
+                   System.out.println("Cliente não encontrado: " + clienteToUpdate);
+               }
         }
     }
 }

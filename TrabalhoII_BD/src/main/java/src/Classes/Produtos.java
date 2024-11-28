@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Produtos {
     protected int idProduto;
@@ -138,4 +139,29 @@ public class Produtos {
         }
     }
 
+    public void update(int idProduto){
+        Scanner scan = new Scanner(System.in);
+        System.out.println("===== ATUALIZAR CAMPO =====");
+        System.out.println("1- Nome");
+        System.out.println("2- Descrição");
+        int opcaoSelecionada = scan.nextInt();
+        try{
+            if(opcaoSelecionada == 1){
+                break;
+            }
+            else if (opcaoSelecionada == 2){
+                break;
+            }
+            else{
+                throw new Exception("Opção inválida!");
+            }
+        } catch(Exception e){
+            System.out.println("Erro ao atualizar: " + e);
+        }
+
+    }
+
+    public void updateNome(int idProduto, String novoNome){
+        break;
+    }
 }
