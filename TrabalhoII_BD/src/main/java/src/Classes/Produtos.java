@@ -147,7 +147,7 @@ public class Produtos {
         int opcaoSelecionada = scan.nextInt();
         try{
             if(opcaoSelecionada == 1){
-                break;
+               this.updateNome();
             }
             else if (opcaoSelecionada == 2){
                 break;
@@ -162,6 +162,6 @@ public class Produtos {
     }
 
     public void updateNome(int idProduto, String novoNome){
-        break;
+
     }
 }
