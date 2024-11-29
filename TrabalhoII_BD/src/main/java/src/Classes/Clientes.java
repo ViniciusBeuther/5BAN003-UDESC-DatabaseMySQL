@@ -103,4 +103,56 @@ public class Clientes {
             }
         }
     }
+
+    public void delete(int clientId){
+        String deleteQuery = "DELETE FROM clientes WHERE id = ?";
+        String deleteQueryCompras = "DELETE FROM compra WHERE idCliente = ?";
+        var db = new MySQLConnection();
+
+        try{
+            var clienteStmt = db.connection.prepareStatement(deleteQuery);
+            var comprasStmt = db.connection.prepareStatement(deleteQueryCompras);
+
+            comprasStmt.setInt(1, clientId);
+            clienteStmt.setInt(1, clientId);
+
+            var rowsAffectedCompras = comprasStmt.executeUpdate();
+            var rowsAffected = clienteStmt.executeUpdate();
+            if(rowsAffected >= 1 && rowsAffectedCompras >= 1){
+                System.out.println("Cliente deletado com sucesso!");
+            } else{
+                System.out.println("Nenhum cliente encontrado com o ID fornecido.");
+            }
+
+        } catch (SQLException e){
+            System.out.println("Erro ao deletar o produto: " + clientId + " - Erro: " + e);
+        }
+    }
+
+    public void create(String name, Date clientSince){
+        MySQLConnection db = new MySQLConnection();
+        String insertQuery = "INSERT INTO clientes(nome, clienteDesde) VALUES (?,?)";
+
+        int year = clientSince.getYear() + 1900;
+        int month = clientSince.getMonth() + 1;
+        int day = clientSince.getDate();
+
+        String preparedDate = year + "-" +
+                (month < 10 ? "0" + month : month) + "-" +
+                (day < 10 ? "0" + day : day);
+
+        try{
+           PreparedStatement clientStmt = db.connection.prepareStatement(insertQuery);
+           clientStmt.setString(1, name);
+           clientStmt.setString(2, preparedDate);
+
+           var rowsAffected = clientStmt.executeUpdate();
+           if(rowsAffected >= 1){
+               System.out.println("Cliente inserido com sucesso!");
+           }
+
+        } catch (SQLException e){
+            System.out.println("Erro ao inserir o cliente no banco de dados. Erro: " + e);
+        }
+    }
 }

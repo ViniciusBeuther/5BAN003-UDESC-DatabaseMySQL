@@ -2,6 +2,7 @@ package src.Classes;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,37 +26,35 @@ public class UserInterface {
     }
 
     public void showMenu(){
-        Scanner scanner = new Scanner(System.in);
-
-        while(true){
-            System.out.println("===== BANCO DE DADOS =====");
+        do {
+            System.out.println("\n===== BANCO DE DADOS =====");
             System.out.println("1- Adicionar novo produto");
             System.out.println("2- Listar produtos");
             System.out.println("3- Listar clientes");
             System.out.println("4- Buscar Produto");
             System.out.println("5- Buscar Cliente");
             System.out.println("6- Editar Cliente");
+            System.out.println("7- Editar Produto");
+            System.out.println("8- Deletar Produto");
+            System.out.println("9- Deletar Cliente");
+            System.out.println("10- Adicionar novo cliente");
             System.out.println("0- Sair");
 
-            System.out.println("Digite a opção desejada: ");
-            this.option = scanner.nextInt();
-
-            if(this.option == 0){
-                break;
-            } else{
-                this.executeOption();
+            System.out.print("Digite a opção desejada: ");
+            try {
+                String input = inputScanner.nextLine();
+                this.option = Integer.parseInt(input);
+                executeOption();
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Por favor, insira um número.");
             }
+        } while (this.option != 0);
         }
 
-        scanner.close();
-    }
 
     public void executeOption(){
 
         switch (this.option){
-            case 0:
-                break;
-
             case 1:
                 String tipoToInsert;
                 String doceOrigem="";
@@ -150,6 +149,7 @@ public class UserInterface {
                     System.out.printf("| %-12d | %-20s | %-50s | %-15s | %-10s |%n", item.getIdProduto(), item.getNome(), item.getDescricao(), item.getTipo(), item.getSiglaUnidadeMed());
                 }
                 System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+                break;
 
             case 3:
                 Clientes clientes = new Clientes();
@@ -163,6 +163,7 @@ public class UserInterface {
                     System.out.printf("| %-12d | %-50s | %-30s%n", cliente.getIdCliente(), cliente.getNome(), cliente.getClienteDesde());
                 }
                 System.out.println("------------------------------------------------------------------------------------");
+                break;
 
             // Search for a product into database
             case 4:
@@ -188,6 +189,7 @@ public class UserInterface {
                 if(!found){
                     System.out.println("Nenhum produto com esse nome foi encontrado: " + termoDeBusca);
                 }
+                break;
 
             // Used to search a client by name
             case 5:
@@ -203,13 +205,16 @@ public class UserInterface {
 
                 for(Clientes cli : clientesSalvosDb){
                    if(cli.getNome().equalsIgnoreCase(termoClientesBusca)){
-                       break;
+                       System.out.println("===== CLIENTE ENCONTRADO =====");
+                       System.out.println("Nome: " + cli.getNome() + "\nCliente desde: " + cli.getClienteDesde() + "\n" + "ID: " + cli.getIdCliente() + "\n");
+                       foundCliente = true;
                    }
 
-                   if(!foundCliente){
-                       System.out.println("Cliente não encontrado: " + termoClientesBusca);
-                   }
                 }
+               if(!foundCliente){
+                   System.out.println("Cliente não encontrado: " + termoClientesBusca);
+               }
+                break;
 
             case 6:
                 boolean updateClientFlag = false;
@@ -239,6 +244,103 @@ public class UserInterface {
                if(!updateClientFlag){
                    System.out.println("Cliente não encontrado: " + clienteToUpdate);
                }
+                break;
+
+            case 7:
+                updateProduct();
+                break;
+
+            case 8:
+                deleteProduct();
+                break;
+
+            case 9:
+                deleteClient();
+                break;
+
+            case 10:
+                createClient();
+                break;
         }
     }
+
+    // Function to update a product
+public void updateProduct(){
+    System.out.println("Digite o ID do produto que deseja atualizar:");
+    int productToEdit = this.inputScanner.nextInt();
+    boolean foundProd = false;
+    for(Produtos p : this.savedProducts){
+        if(p.getIdProduto() == productToEdit){
+            Produtos prod = new Produtos();
+
+            foundProd = true;
+            System.out.println("Produto a ser editado: " + p.getNome());
+
+            try {
+                System.out.println("===== ATUALIZAR CAMPO =====");
+                System.out.println("1- Nome");
+                System.out.println("2- Sair");
+                int opcaoSelecionada = this.inputScanner.nextInt();
+                this.inputScanner.nextLine(); // Consumir o "\n" restante após o número
+
+                if (opcaoSelecionada == 1) {
+                    System.out.print("Digite o novo nome: ");
+                    String novoNome = this.inputScanner.nextLine();
+
+                    prod.updateNome(p.getIdProduto(), novoNome);
+
+                } else if (opcaoSelecionada == 2) {
+                    System.out.println("Operação cancelada.");
+                } else {
+                    System.out.println("Opção inválida!");
+                }
+            } catch (Exception e) {
+                System.out.println("Erro ao atualizar: " + e.getMessage());
+            }
+        }
+    }
+
+    if(!foundProd){
+        System.out.println("Produto não encontrado!");
+    }
 }
+
+    // Function to delete a product
+public void deleteProduct(){
+        System.out.println("Digite o produto que deseja remover (ID): ");
+        int idToDelete = Integer.parseInt(this.inputScanner.nextLine());
+
+        try{
+            var products = new Produtos();
+            products.deleteProduto(idToDelete);
+        } catch (Exception e){
+            System.out.println("Erro ao remover o produto.");
+        }
+}
+
+public void deleteClient(){
+    System.out.println("Digite o cliente que deseja remover (ID): ");
+    int idToDelete = Integer.parseInt(this.inputScanner.nextLine());
+
+    try{
+        var clientes = new Clientes();
+        clientes.delete(idToDelete);
+    } catch (Exception e){
+        System.out.println("Erro ao remover o cliente.");
+    }
+}
+
+public void createClient(){
+    System.out.println("Digite o nome do cliente a ser inserido: ");
+    String clientName = this.inputScanner.nextLine();
+    Date clientSince = new Date();
+    var cliente = new Clientes();
+    try{
+        cliente.create(clientName, clientSince);
+    } catch (Exception e){
+        System.out.println("Erro ao criar novo cliente.");
+    }
+
+}
+}
+

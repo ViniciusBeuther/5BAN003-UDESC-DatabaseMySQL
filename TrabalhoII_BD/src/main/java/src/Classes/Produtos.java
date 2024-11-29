@@ -1,5 +1,6 @@
 package src.Classes;
 
+import com.mysql.cj.PreparedQuery;
 import src.database.MySQLConnection;
 
 import java.sql.PreparedStatement;
@@ -139,29 +140,61 @@ public class Produtos {
         }
     }
 
-    public void update(int idProduto){
-        Scanner scan = new Scanner(System.in);
-        System.out.println("===== ATUALIZAR CAMPO =====");
-        System.out.println("1- Nome");
-        System.out.println("2- Descrição");
-        int opcaoSelecionada = scan.nextInt();
+    // Update name
+    public void updateNome(int idProduto, String novoNome) {
+        MySQLConnection db = new MySQLConnection();
+        String updateNameQuery = "UPDATE produtos SET nome=? WHERE idProduto=?";
+
         try{
-            if(opcaoSelecionada == 1){
-               this.updateNome();
+            //System.out.println("PARAMS: " + idProduto + " - " + novoNome);
+            PreparedStatement productStmt = db.connection.prepareStatement(updateNameQuery);
+            productStmt.setString(1, novoNome);
+            productStmt.setInt(2, idProduto);
+
+            int rowsAffected = productStmt.executeUpdate();
+            if(rowsAffected >= 1){
+                System.out.println("Nome do produto atualizado com sucesso!");
+            } else{
+                System.out.println("Nenhum produto encontrado com o nome fornecido.");
             }
-            else if (opcaoSelecionada == 2){
-                break;
-            }
-            else{
-                throw new Exception("Opção inválida!");
-            }
+
         } catch(Exception e){
-            System.out.println("Erro ao atualizar: " + e);
+            System.out.println("Erro ao seu conectar ao banco de dados para atualização de nome do produto. - " + e );
+        } finally {
+            try{
+                if(db.connection != null && !db.connection.isClosed()){
+                    db.connection.close();
+                }
+            } catch (Exception e){
+                System.out.println("Erro ao encerrar conexão com o banco de dados.");
+            }
+        }
+    }
+
+    public void deleteProduto(int idProduto){
+        String deleteQuery = "DELETE FROM produtos WHERE idProduto = ?";
+        String deleteDoceQuery = "DELETE FROM doces WHERE idProduto = ?";
+        var db = new MySQLConnection();
+
+        try{
+            var productStmt = db.connection.prepareStatement(deleteQuery);
+            var doceStmt = db.connection.prepareStatement(deleteDoceQuery);
+
+            doceStmt.setInt(1, idProduto);
+            productStmt.setInt(1, idProduto);
+
+            var rowsAffectedDoces = doceStmt.executeUpdate();
+            var rowsAffected = productStmt.executeUpdate();
+            if(rowsAffected >= 1 && rowsAffectedDoces >= 1){
+                System.out.println("Produto deletado com sucesso!");
+            } else{
+                System.out.println("Nenhum produto encontrado com o ID fornecido.");
+            }
+
+        } catch (SQLException e){
+            System.out.println("Erro ao deletar o produto: " + idProduto + " - Erro: " + e);
         }
 
     }
-
-    public void updateNome(int idProduto, String novoNome){
-
-    }
 }
+
